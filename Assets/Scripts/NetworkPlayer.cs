@@ -16,20 +16,6 @@ namespace HelloWorld
         }
         public void Spawn()
         {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                transform.position = new Vector3(3, 1, 0);
-                Position.Value = transform.position;
-            }
-            else
-            {
-                SubmitPositionRequestServerRpc();
-            }
-        }
-
-        [ServerRpc]
-        void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
-        {
             if (IsOwner)
             {
                 Position.Value = new Vector3(7, -1.7f, 0);
@@ -38,6 +24,7 @@ namespace HelloWorld
                 Position.Value = new Vector3(-6, -1.7f, 0);
             }
         }
+
 
         void Update()
         {
