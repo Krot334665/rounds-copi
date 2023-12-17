@@ -5,19 +5,15 @@ namespace HelloWorld
 {
     public class NetworkPlayer : NetworkBehaviour
     {
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private Rigidbody2D rb;
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
         public float speed = 5f;
         public float jumpForce = 10f;
         public Transform groundCheck;
         public LayerMask groundLayer;
 
-        private Rigidbody2D rb;
         private bool isGrounded;
-
-        private void Start()
-        {
-            rb = GetComponent<Rigidbody2D>();
-        }
 
         public override void OnNetworkSpawn()
         {
@@ -29,34 +25,44 @@ namespace HelloWorld
 
         public void Spawn()
         {
-            if (IsOwner)
+            if (IsOwner && NetworkManager.Singleton.IsHost)
             {
                 Position.Value = new Vector3(7, -1.7f, 0);
-            }else
+                transform.position = Position.Value;
+                _spriteRenderer.color = new Color(1f, 0.5f, 0.1f, 1);
+            }else if(IsOwner)
             {
-                Position.Value = new Vector3(-6, -1.7f, 0);
+                transform.position = new Vector3(-6, -1.7f, 0);
+                _spriteRenderer.color = Color.blue;
             }
-            transform.position = Position.Value;
         }
 
 
         void Update()
         {
-            Position.Value = transform.position;
-            // Проверка, находится ли персонаж на земле
-                    isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+            if (!IsOwner)
+            {
+                return;
+            }
+            
+            // if (NetworkManager.Singleton.IsHost)
+            // {
+            //     Position.Value = transform.position;
+            // }
 
-                    // Обработка ввода для движения и прыжка
-                    float horizontalInput = Input.GetAxis("Horizontal");
-                    HandleMovement(horizontalInput);
+            
+                // Проверка, находится ли персонаж на земле
+                isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
-                    if (isGrounded && Input.GetButtonDown("Jump"))
-                    {
-                        Jump();
-                    }
-                
+                // Обработка ввода для движения и прыжка
+                float horizontalInput = Input.GetAxis("Horizontal");
+                HandleMovement(horizontalInput);
+
+                if (isGrounded && Input.GetButtonDown("Jump"))
+                {
+                    Jump();
+                }
         }
-
 
         private void HandleMovement(float horizontalInput)
         {
