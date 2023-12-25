@@ -7,7 +7,20 @@ namespace HelloWorld
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Rigidbody2D rb;
-        public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
+        NetworkVariable<PlayerData> Data = new NetworkVariable<PlayerData> (new PlayerData { PlayerName = "Anton",HelthPoint = 100 },NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public struct PlayerData : INetworkSerializable
+        {
+            public string PlayerName;
+            public int HelthPoint;
+
+            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+            {
+                serializer.SerializeValue(ref PlayerName);
+                serializer.SerializeValue(ref HelthPoint);
+
+            }
+        }
+
         public float speed = 5f;
         public float jumpForce = 10f;
         public Transform groundCheck;
@@ -27,8 +40,6 @@ namespace HelloWorld
         {
             if (IsOwner && NetworkManager.Singleton.IsHost)
             {
-                Position.Value = new Vector3(7, -1.7f, 0);
-                transform.position = Position.Value;
                 _spriteRenderer.color = new Color(1f, 0.5f, 0.1f, 1);
             }else if(IsOwner)
             {
