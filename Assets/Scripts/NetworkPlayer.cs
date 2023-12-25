@@ -45,10 +45,10 @@ namespace HelloWorld
                 return;
             }
             
-            // if (NetworkManager.Singleton.IsHost)
-            // {
-            //     Position.Value = transform.position;
-            // }
+         //    if (NetworkManager.Singleton.IsHost)
+         //    {
+         //        Position.Value = transform.position;
+         //    }
 
             
                 // Проверка, находится ли персонаж на земле
