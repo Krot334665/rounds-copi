@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1737364757931251394}
   - component: {fileID: -8927060108825388179}
   - component: {fileID: 426264368946374023}
+  - component: {fileID: 8433204865172495280}
   - component: {fileID: 6673632725326090409}
   m_Layer: 0
   m_Name: Projectile
@@ -149,6 +150,26 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.49999997
+--- !u!114 &8433204865172495280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3576123282657499865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2990024930
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 1
 --- !u!114 &6673632725326090409
 MonoBehaviour:
   m_ObjectHideFlags: 0
