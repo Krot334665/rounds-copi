@@ -6,10 +6,9 @@ public class GunController : NetworkBehaviour
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform spawnPos;
     [SerializeField] Transform playerPos;
-    [SerializeField] float spawnForce;
     private GameObject projectile;
 
-    void Update()
+    private void Update()
     {
         if (!IsOwner)
         {
@@ -19,8 +18,6 @@ public class GunController : NetworkBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             InstantiateProjectileServerRpc(spawnPos.position);
-
-            SetVelocityServerRpc();
         }
     }
 
@@ -28,35 +25,12 @@ public class GunController : NetworkBehaviour
     {
         projectile = Instantiate(projectilePrefab, position, Quaternion.identity);
         projectile.GetComponent<NetworkObject>().Spawn();
-    }
+        
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 weaponPosition = playerPos.position;
 
-    private void Shoot()
-    {
-        Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-
-        if (rb != null)
-        {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 weaponPosition = playerPos.position;
-
-            Vector2 direction = (mousePosition - weaponPosition).normalized;
-            rb.velocity = direction * spawnForce;
-        }
-        else
-        {
-            Debug.Log("erorrr");
-        }
-    }
-
-    [ServerRpc]
-    public void SetVelocityServerRpc(ServerRpcParams serverRpcParams = default)
-    {
-        var clientId = serverRpcParams.Receive.SenderClientId;
-        if (NetworkManager.ConnectedClients.ContainsKey(clientId))
-        {
-            var client = NetworkManager.ConnectedClients[clientId];
-            Shoot();
-        }
+        Vector2 direction = (mousePosition - weaponPosition).normalized;
+        projectile.GetComponent<Projectile>().SetVelocity(direction);
     }
     
     [ServerRpc]

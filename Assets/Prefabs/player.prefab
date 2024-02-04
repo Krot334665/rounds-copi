@@ -188,8 +188,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 88204604193826611}
   rb: {fileID: 4001332715332852886}
-  Position:
-    m_InternalValue: {x: 0, y: 0, z: 0}
   speed: 5
   jumpForce: 10
   groundCheck: {fileID: 4048053931642361712}
@@ -248,6 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5312185789953766327}
   - component: {fileID: 7763769104126662772}
+  - component: {fileID: 8738532889793831791}
   m_Layer: 0
   m_Name: Rith hand
   m_TagString: Untagged
@@ -285,6 +284,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   height: 1
+--- !u!114 &8738532889793831791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2164925701929557138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &2170667207196847733
 GameObject:
   m_ObjectHideFlags: 0

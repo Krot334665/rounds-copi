@@ -1,11 +1,18 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
-public class MousRotate : MonoBehaviour
+public class MousRotate : NetworkBehaviour
 {
     // Установите желаемую высоту объекта относительно экрана
     public float height = 1.0f;
-    void Update()
+    
+    private void Update()
     {
+        if (!IsOwner || !Application.isFocused)
+        {
+            return;
+        }
+        
         // Получаем позицию мыши в экранных координатах
         Vector3 mousePosition = Input.mousePosition;
 
@@ -37,6 +44,5 @@ public class MousRotate : MonoBehaviour
 
         // Применяем поворот к объекту
         transform.rotation = rotation;
-
     }
 }
