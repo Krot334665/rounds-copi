@@ -22,12 +22,12 @@ public class Projectile : NetworkBehaviour
          if (!collision.gameObject.CompareTag("Map"))
          {
              collision.gameObject.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
-             collision.gameObject.GetComponent<NetworkObject>().Despawn();
+             collision.gameObject.GetComponent<PlayerHealth>().TakeDamage();
          }
 
-         gameObject.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
-         gameObject.GetComponent<NetworkObject>().Despawn();
-     }
+        gameObject.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
+        gameObject.GetComponent<NetworkObject>().Despawn();
+    }
 
 
      [ServerRpc]
