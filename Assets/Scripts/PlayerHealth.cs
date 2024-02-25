@@ -1,6 +1,4 @@
-using System;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,25 +10,23 @@ public class PlayerHealth : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (!IsServer)
-        {
+        // if (!IsServer)
+        // {
             health.OnValueChanged += OnHealthChanged;
-        }
+        // }
     }
     
     private void OnHealthChanged(ushort previousvalue, ushort newvalue)
     {
+        // Debug.Log($"{previousvalue} and new {newvalue}");
         _healthSlider.value = newvalue;
         if (health.Value <= 0)
         {
             gameObject.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
             gameObject.GetComponent<NetworkObject>().Despawn();
         }
-
-
     }
 
-    [ContextMenu("Take Damage")]
     public void TakeDamage()
     {
         health.Value -= 10;

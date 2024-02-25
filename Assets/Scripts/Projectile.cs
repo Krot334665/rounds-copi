@@ -3,9 +3,17 @@ using UnityEngine;
 
 public class Projectile : NetworkBehaviour
 {
+    public NetworkVariable<Vector2> velocity = new(Vector2.one, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private float _shootForce = 3f;
-    private Collision2D collision2D;
+    
+    private Collision2D _collisionInteraction;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        _rigidbody2D.velocity = velocity.Value;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -13,22 +21,20 @@ public class Projectile : NetworkBehaviour
         {
             return;
         }
-        collision2D = collision;
+        _collisionInteraction = collision;
         DespawnProjectileServerRpc();
     }
 
-     private void DespawnProjectile(Collision2D collision)
+     private void DespawnProjectile(Collision2D collisionInteraction)
      {
-         if (!collision.gameObject.CompareTag("Map"))
+         if (collisionInteraction.gameObject.CompareTag("Player"))
          {
-             collision.gameObject.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
-             collision.gameObject.GetComponent<PlayerHealth>().TakeDamage();
+             collisionInteraction.gameObject.GetComponent<PlayerHealth>().TakeDamage();
          }
 
         gameObject.GetComponent<NetworkObject>().DontDestroyWithOwner = true;
         gameObject.GetComponent<NetworkObject>().Despawn();
     }
-
 
      [ServerRpc]
      public void DespawnProjectileServerRpc(ServerRpcParams serverRpcParams = default)
@@ -37,12 +43,13 @@ public class Projectile : NetworkBehaviour
          if (NetworkManager.ConnectedClients.ContainsKey(clientId))
          {
              var client = NetworkManager.ConnectedClients[clientId];
-             DespawnProjectile(collision2D);
+             DespawnProjectile(_collisionInteraction);
          }
      }
-
+     
      public void SetVelocity(Vector2 direction)
      {
-         _rigidbody2D.velocity = direction * _shootForce;
+         Debug.Log($"{direction}");
+         velocity.Value = direction * _shootForce;
      }
 }

@@ -6,7 +6,9 @@ public class GunController : NetworkBehaviour
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform spawnPos;
     [SerializeField] Transform playerPos;
-    private GameObject projectile;
+
+    private Vector2 _directionProjectile;
+    private GameObject _projectile;
 
     private void Update()
     {
@@ -17,31 +19,36 @@ public class GunController : NetworkBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            InstantiateProjectileServerRpc(spawnPos.position);
+            CalculateDirection();
+            InstantiateProjectileServerRpc();
         }
     }
 
-    private void SpawnProjectile(Vector3 position)
+    private void CalculateDirection()
     {
-        projectile = Instantiate(projectilePrefab, position, Quaternion.identity);
-        projectile.GetComponent<NetworkObject>().Spawn();
-        
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 weaponPosition = playerPos.position;
 
         Vector2 direction = (mousePosition - weaponPosition).normalized;
-        projectile.GetComponent<Projectile>().SetVelocity(direction);
+        _directionProjectile = direction;
     }
-    
+
+    private void SpawnProjectile()
+    {
+        _projectile = Instantiate(projectilePrefab, spawnPos.position, Quaternion.identity);
+        _projectile.GetComponent<Projectile>().SetVelocity(_directionProjectile);
+        _projectile.GetComponent<NetworkObject>().Spawn();
+        
+    }
+
     [ServerRpc]
-    public void InstantiateProjectileServerRpc(Vector3 position, ServerRpcParams serverRpcParams = default)
+    public void InstantiateProjectileServerRpc(ServerRpcParams serverRpcParams = default)
     {
         var clientId = serverRpcParams.Receive.SenderClientId;
         if (NetworkManager.ConnectedClients.ContainsKey(clientId))
         {
             var client = NetworkManager.ConnectedClients[clientId];
-            Debug.Log($"pos {spawnPos.position}");
-            SpawnProjectile(position);
+            SpawnProjectile();
         }
     }
 }
